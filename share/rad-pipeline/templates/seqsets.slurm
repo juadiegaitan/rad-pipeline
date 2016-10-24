@@ -13,7 +13,7 @@
 # load modules
 module load biostreamtools-gcc/{biostreamtoolsversion} parallel/{parallelversion}  rad-pipeline/{radpipelineversion}
 
-rad_job_log Starting $0
+rad-pipeline_log Starting $0
 
 # filter each input file
 MD5="MD5 Hashes:"
@@ -38,5 +38,5 @@ echo ""
 echo -e $MD5
 echo ""
 
-rad_job_log Finished $
+rad-pipeline_log Finished $
 

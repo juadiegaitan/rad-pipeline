@@ -20,7 +20,7 @@ CORES={cores}
 # load modules
 module load fastqc/{fastqcversion} parallel/{parallelversion}  rad-pipeline/{radpipelineversion}
 
-rad_job_log Starting $0
+rad-pipeline_log Starting $0
 
 ## do work ##
 FILESEXP=`ls -1 $FILES`
@@ -30,5 +30,5 @@ CMD="echo \"fastqc {{1}}\"; fastqc -o . {{1}}; export f=\$(basename {{1}}); rm \
 
 parallel -j $CORES  --no-notice "$CMD" ::: $FILESEXP
 
-rad_job_log Finished $0
+rad-pipeline_log Finished $0
 

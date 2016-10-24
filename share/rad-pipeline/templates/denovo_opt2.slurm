@@ -12,7 +12,7 @@
 
 module load stacks-gcc/{stacksversion} parallel/{parallelversion} rad-pipeline/{radpipelineversion}
 
-rad_job_log Starting $0
+rad-pipeline_log Starting $0
 
 ## SETTINGS TO EDIT ##
 
@@ -122,5 +122,5 @@ done
 cat $TMPDIR/stats/* >> stats-phase2a.tsv
 rm -r $TMPDIR/stats
 
-rad_job_log Finished $0
+rad-pipeline_log Finished $0
 

@@ -24,7 +24,7 @@ CORES={cores}
 # load modules
 module load pear-gcc/{pearversion}  rad-pipeline/{radpipelineversion}
 
-rad_job_log Starting $0
+rad-pipeline_log Starting $0
 
 # pair each input file
 # loops over each R1 filtered file
@@ -68,5 +68,5 @@ echo ""
 echo -e $MD5
 echo ""
 
-rad_job_log Finished $0
+rad-pipeline_log Finished $0
 

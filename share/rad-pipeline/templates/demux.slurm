@@ -36,19 +36,30 @@ READCOUNTFILE="sample.counts"
 FLAGS="-D -q -r"
 #FLAGS="-D -q -r -t 75"
 
+# Concatenate output files when there are duplicate Indexes
+# NOTE: this will delete all *.fq files from the current
+# directory before starting
+MERGE_DUPLICATE_RAD_TAGS=0
+#MERGE_DUPLICATE_RAD_TAGS=1
+
 ## END SETTINGS ##
 
 # load modules
 module load stacks-gcc/{stacksversion} rad-pipeline/{radpipelineversion}
 
-rad_job_log Starting $0
+rad-pipeline_log Starting $0
 
 # get barcodes
-BARCODES=$(cat ${{RAD_PIPELINE_DIR}}/share/rad-pipeline/ddRAD_barcodes)
+BARCODES=`cat ${{RAD_PIPELINE_DIR}}/data/ddRAD_barcodes`
 
 # put header on count file
 echo -e "Date:\t$(date)" >> $READCOUNTFILE
 echo 'Filename	Barcode	Count' >> $READCOUNTFILE
+
+# remove sequences from last run
+if [ $MERGE_DUPLICATE_RAD_TAGS == 1 ]; then
+	rm *.fq
+fi
 
 # demultiplex each index one after another
 MD5="MD5 Hashes:"
@@ -102,15 +113,17 @@ for R1FILENAME in `ls -1 $FILES`; do
                 II=`printf "%02d" $i`
                 MERGEFILENAME="${{INDEX}}_RAD${{II}}.fq"
 
-                # merge output files
-                cat $MFILENAME > $MERGEFILENAME
-
-                # remove low count indexes
-                COUNT=$(wc -l $MERGEFILENAME | awk '{{ print $1}}')
+                # skip low count indexes
+                COUNT=$(wc -l $MFILENAME | awk '{{ print $1}}')
 		RCOUNT=$((COUNT/4))
-                if [ $RCOUNT -lt $READ_THRESHOLD ] ; then
-                        rm $MERGEFILENAME
-                else
+                if [ $RCOUNT -gt $READ_THRESHOLD ] ; then
+                	# merge output files
+			if [ $MERGE_DUPLICATE_RAD_TAGS == 1 ]; then
+	        	        cat $MFILENAME >> $MERGEFILENAME
+			else
+				cat $MFILENAME > $MERGEFILENAME
+			fi
+
                         echo "${{BARCODE}} => ${{MERGEFILENAME}}"
 			echo "${{MERGEFILENAME}}	${{BARCODE}}	${{RCOUNT}}" >> $READCOUNTFILE
                 fi
@@ -133,5 +146,5 @@ echo ""
 echo -e $MD5
 echo ""
 
-rad_job_log Finished $0
+rad-pipeline_log Finished $0
 

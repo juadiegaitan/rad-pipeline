@@ -12,7 +12,7 @@
 # load modules
 module load kraken-gcc/{krakenversion} rad-pipeline/{radpipelineversion}
 
-rad_job_log Starting $0
+rad-pipeline_log Starting $0
 
 # process each raw sequence file
 MD5=""
@@ -44,5 +44,5 @@ echo ""
 echo -e $MD5
 echo ""
 
-rad_job_log Finished $0
+rad-pipeline_log Finished $0
 
