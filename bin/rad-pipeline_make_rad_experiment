@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# a script to setup the directories for an experiment
+# usage: make_experiment EXPERIMENT_NAME
+
+if [ -z "$1" ]; then
+	echo ""
+	echo "Usage: make_experiment EXPERIMENT_NAME"
+	echo ""
+	#echo ""
+	exit 1
+fi
+
+echo "Making experiment directory: $1"
+
+TYPE="Create"
+if [ -d "$1" ]; then
+	TYPE="Upgrade"
+fi
+
+cmd="mkdir -p $1/00-raw $1/01-kraken $1/02-filtered $1/03-paired $1/04-demux $1/05-denovo_opt"
+echo $cmd
+$cmd
+
+# add log entry
+echo  "`date '+%Y-%m-%d %H:%M:%S'`: $TYPE Experiment: $1" >> $1/process.log
+
+# create slurm.conf file if not exists
+touch $1/slurm.conf
+
+echo "Done"
+

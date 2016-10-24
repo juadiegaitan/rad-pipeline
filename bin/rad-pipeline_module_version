@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# prints the version of a module
+
+TMPFILE="/tmp/$USER.modvertmp"
+
+module avail "$1" -t 2> $TMPFILE
+
+#echo "Searching for '$1'"
+
+A=`grep "^$1" $TMPFILE | sed "s|.*/\(.*\)|\1|g" | tail -1`
+#A=`grep "^$1" $TMPFILE | sed "s|.*/\(.*\)|\1|g"`
+
+echo $A
+
+rm -f $TMPFILE
+

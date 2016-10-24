@@ -1,0 +1,27 @@
+#!/bin/bash
+
+## sets up a pyrad optimisation experiment
+
+EXPNAME=$1
+
+
+if [ -z "$EXPNAME" ] ; then
+	echo "Usage: make_pyrad_opt_experiment EXPERIMENT_NAME"
+	exit
+fi
+
+# make experiment directory
+mkdir -p $EXPNAME
+cd $EXPNAME
+
+# setup experiment directory
+module load limsradseq
+mkdir input output
+cp $LIMSRADSEQ_DIR/pyrad_opt/* .
+
+echo ""
+echo "Created experiment '$EXPNAME'"
+echo ""
+echo "For details on how to use see:"
+echo " https://docs.google.com/document/d/1SfJW_O2Co0K7Mu_OKu3Uir4kyN_Di83iq_oreU7WsU0"
+echo ""

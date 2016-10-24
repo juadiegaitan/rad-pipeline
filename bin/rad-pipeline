@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "[RADSeq pipeline]"
+echo ""
+echo "See https://github.com/molecularbiodiversity/rad-pipeline for details"
+

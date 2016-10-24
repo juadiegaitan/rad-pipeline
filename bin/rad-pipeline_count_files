@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# counts the number of arguments it received
+
+LS=`ls -1 "$@"`
+
+#echo $LS
+echo $LS | sed 's/ /\n/g' | wc -l
+

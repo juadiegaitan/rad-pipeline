@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# collects stats from various places from a stacks denovo_map.pl (and populations) run.
+
+
+
+# extract the arguments
+RUN_ID=$1
+DENOVO_LOG=$2
+echo -e "Denovo log:\t$DENOVO_LOG"
+
+# remove path and extension
+INPUT_FILES=${@:3}
+#echo "Input Files: $INPUT_FILES"
+INPUT_FILES_ARRAY=( $INPUT_FILES )
+INPUT_FILES_NODIR=( ${INPUT_FILES_ARRAY[@]##*/} )
+SAMPLES_1LINE=$(echo ${INPUT_FILES_NODIR[@]%.fq})
+SAMPLES_MLINE=$(echo "$SAMPLES_1LINE" | sed 's/ /\n/g')
+
+# headers (NOTE: they match the sub-commands in paste command)
+HEAD0="RunID\tSample"
+HEAD1="Coverage Mean\tCoverage Mean Stdev"
+HEAD2="Mean merged coverage depth\tMean merged coverage depth Stdev\tMax merged coverage depth"
+HEAD3="#utilized reads"
+HEAD4="Matched remainder reads\tUnmatched remainder reads"
+HEAD5="Stacks\tCatalog size (loci)"
+
+# print headings
+echo -e "$HEAD0\t$HEAD1\t$HEAD2\t$HEAD3\t$HEAD4\t$HEAD5"
+
+# merge stats
+paste \
+<(echo ${INPUT_FILES_ARRAY[@]/*/$RUN_ID} | sed 's/ /\n/g') \
+<(echo -e "$SAMPLES_MLINE") \
+<(awk '/Coverage mean/{print $3"\t"$5}' $DENOVO_LOG | sed 's/;//g') \
+<(awk '/Mean merged coverage depth/{print $6"\t"$9"\t"$11}' $DENOVO_LOG | sed 's/;//g') \
+<(awk '/Number of utilized reads/{print $5}' $DENOVO_LOG) \
+<(awk '/unable to match/{print $2"\t"$8}' $DENOVO_LOG) \
+<(awk '/stacks compared against the catalog containing/{print $1"\t"$8}' $DENOVO_LOG)
+
