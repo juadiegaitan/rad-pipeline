@@ -28,4 +28,9 @@ export PATH=$PATH:$PWD/rad-pipeline-0.1/bin
 
 ## Getting Started
 
-[User Manual]()
+[User Manual](docs/index.md)
+
+## License
+
+rad-pipeline is licensed under the BSD 3-clause open-source license.  Please 
+refer to LICENSE file for details
